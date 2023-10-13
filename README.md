@@ -22,3 +22,16 @@ Before running WMIC-GUI, ensure that you have the following prerequisites instal
 
 ```bash
 git clone https://github.com/your-username/wmic-gui.git
+cd wmic-gui
+python wmic_gui.py
+```
+
+## Usage
+
+- Launch the application, and you will see a tabbed interface with categories like "OS," "CPU," "DiskDrive," and more.
+- Click on a tab to view information about the selected category.
+- Enjoy exploring the system attributes and their values in a clean and organized format.
+
+## Known Issues
+
+- Please note that this application is designed for Windows systems only, as it relies on WMIC commands.

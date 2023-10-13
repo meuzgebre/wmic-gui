@@ -23,7 +23,7 @@ Before running WMIC-GUI, ensure that you have the following prerequisites instal
 ```bash
 git clone https://github.com/your-username/wmic-gui.git
 cd wmic-gui
-python wmic_gui.py
+python main.py
 ```
 
 ## Usage

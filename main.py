@@ -116,7 +116,8 @@ def fetch_data_and_update_tree(tab, category):
 
 # Create the main application window
 def main():
-
+    app = tk.Tk()
+    
     # Get the screen width and height
     screen_width = app.winfo_screenwidth()
     screen_height = app.winfo_screenheight()
@@ -125,7 +126,6 @@ def main():
     x = (screen_width - 800) // 2
     y = (screen_height - 600) // 2
 
-    app = tk.Tk()
     app.title("System Information Viewer")
     app.geometry(f"800x600+{x}+{y}")  # Fixed window size
 

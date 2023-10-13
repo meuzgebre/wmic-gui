@@ -1,6 +1,8 @@
 import tkinter as tk
 from tkinter import ttk
 import subprocess
+import threading
+import json
 
 # Function to execute a wmic command for a given category and return the output
 def execute_wmic_command(category):
@@ -23,11 +25,26 @@ def execute_wmic_command(category):
 
             pairs = dict(zip(headers, values))
 
+            # Cache the data in a local file
+            cache_file = f"{category}.json"
+            with open(cache_file, "w") as cache:
+                json.dump(pairs, cache)
+
             return pairs
         else:
             return None
     except Exception as e:
         print(f"An error occurred: {str(e)}")
+        return None
+
+# Function to load data from cache
+def load_data_from_cache(category):
+    try:
+        cache_file = f"{category}.json"
+        with open(cache_file, "r") as cache:
+            data = json.load(cache)
+            return data
+    except FileNotFoundError:
         return None
 
 # Function to create a table (Treeview) for a category
@@ -53,6 +70,15 @@ def create_table(tab, pairs):
     tree.pack(fill="both", expand=True)
     return tree
 
+# Function to fetch data and update the table
+def fetch_data_and_update_tree(tab, category):
+    pairs = load_data_from_cache(category)
+    if pairs is None:
+        pairs = execute_wmic_command(category)
+
+    if pairs:
+        table = create_table(tab, pairs)
+
 # Create the main application window
 def main():
     app = tk.Tk()
@@ -62,23 +88,16 @@ def main():
     # Create tabs for different categories
     tabs = ttk.Notebook(app)
 
-    categories = ["OS", "CPU", "DiskDrive", "LogicalDisk", "MemoryChip", "Baseboard", "BIOS"]
-    # categories = ["OS", "CPU", "DiskDrive", "LogicalDisk", "MemoryChip", "Baseboard", "BIOS", "DISKQUOTA", "MEMORYCHIP", "NIC", "PORT", "PORTCONNECTOR", "REGISTRY", "SOUNDDEV", "SYSTEMSLOT", "UPS", "VOLTAGE", "BASEBOARD", "BIOS", "COMPUTERSYSTEM", "DESKTOPMONITOR", "DMACHANNEL", "FSDIR"]
-
-    # Retrieve data for all categories when the program starts
-    category_data = {}
-    for category in categories:
-        data = execute_wmic_command(category)
-        if data:
-            category_data[category] = data
+    # categories = ["OS", "CPU", "DiskDrive", "LogicalDisk", "MemoryChip", "Baseboard", "BIOS"]
+    categories = ["OS", "CPU", "DiskDrive", "LogicalDisk", "MemoryChip", "Baseboard", "BIOS", "MEMORYCHIP", "NIC"]
 
     for category in categories:
         tab = ttk.Frame(tabs)
         tabs.add(tab, text=category)
 
-        pairs = category_data.get(category, {})
-
-        table = create_table(tab, pairs)
+        # Use threading to fetch data in parallel
+        thread = threading.Thread(target=fetch_data_and_update_tree, args=(tab, category))
+        thread.start()
 
     tabs.pack(fill="both", expand=True)  # Make the tabs expand to fill the window
 

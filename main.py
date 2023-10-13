@@ -4,7 +4,7 @@ import subprocess
 import threading
 import json
 
-# Function to execute a wmic command for a given category and return the output
+# Function to execute a wmic command for a given category
 def execute_wmic_command(category):
     """
     Execute a WMIC command to retrieve system information for a given category.
@@ -28,14 +28,14 @@ def execute_wmic_command(category):
             # Iterate over the data list and split into headers and values
             for item in lines:
                 if item:  # Check if the item is not an empty string
-                    header, value = item.split('=', 1)  # Split at the first "="
+                    header, value = item.split('=', 1)  # Split at the "="
                     headers.append(header)
                     values.append(value)
 
             pairs = dict(zip(headers, values))
 
             # Cache the data in a local file
-            cache_file = f"{category}.json"
+            cache_file = f"caches/{category}.json"
             with open(cache_file, "w") as cache:
                 json.dump(pairs, cache)
 
@@ -58,7 +58,7 @@ def load_data_from_cache(category):
         dict: A dictionary containing the cached system information.
     """
     try:
-        cache_file = f"{category}.json"
+        cache_file = f"caches/{category}.json"
         with open(cache_file, "r") as cache:
             data = json.load(cache)
             return data
@@ -89,7 +89,7 @@ def create_table(tab, pairs):
 
     for col in columns:
         tree.heading(col, text=col)
-        tree.column(col, width=200)  # Adjust the column width as needed
+        tree.column(col, width=200)
 
     # Adding the rows to the tree
     for att, value in pairs.items():
@@ -122,24 +122,29 @@ def main():
     screen_width = app.winfo_screenwidth()
     screen_height = app.winfo_screenheight()
 
+    # Set the window size
+    win_x = 800
+    win_y = 600
+
     # Calculate the X and Y coordinates for centering the window
-    x = (screen_width - 800) // 2
-    y = (screen_height - 600) // 2
+    x = (screen_width - win_x) // 2
+    y = (screen_height - win_y) // 2
 
     app.title("System Information Viewer")
-    app.geometry(f"800x600+{x}+{y}")  # Fixed window size
+    app.geometry(f"{win_x}x{win_y}+{x}+{y}")
 
     # Create tabs for different categories
     tabs = ttk.Notebook(app)
 
     # categories = ["OS", "CPU", "DiskDrive", "LogicalDisk", "MemoryChip", "Baseboard", "BIOS"]
-    categories = ["OS", "CPU", "DiskDrive", "LogicalDisk", "MemoryChip", "Baseboard", "BIOS", "MEMORYCHIP", "NIC"]
+    categories = ["OS", "CPU", "DiskDrive", "LogicalDisk", "MemoryChip", "Baseboard", "BIOS", "NIC"]
 
     for category in categories:
         tab = ttk.Frame(tabs)
         tabs.add(tab, text=category)
 
         # Use threading to fetch data in parallel
+        # Todo: Try to reduce the time it take to run the app 
         thread = threading.Thread(target=fetch_data_and_update_tree, args=(tab, category))
         thread.start()
 

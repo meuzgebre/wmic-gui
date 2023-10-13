@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 import subprocess
 
-# Function to execute a wmic command for a given category and return the output
+# Function to execute a wmic command for a given category
 def execute_wmic_command(category):
     try:
         command = f"wmic {category} get /format:list"
@@ -17,7 +17,7 @@ def execute_wmic_command(category):
             # Iterate over the data list and split into headers and values
             for item in lines:
                 if item:  # Check if the item is not an empty string
-                    header, value = item.split('=', 1)  # Split at the first "="
+                    header, value = item.split('=', 1)  # Split at the "="
                     headers.append(header)
                     values.append(value)
 
@@ -44,7 +44,7 @@ def create_table(tab, pairs):
 
     for col in columns:
         tree.heading(col, text=col)
-        tree.column(col, width=200)  # Adjust the column width as needed
+        tree.column(col, width=200)
 
     # Adding the rows to the tree
     for att, value in pairs.items():
@@ -62,8 +62,7 @@ def main():
     # Create tabs for different categories
     tabs = ttk.Notebook(app)
 
-    categories = ["OS", "CPU", "DiskDrive", "LogicalDisk", "MemoryChip", "Baseboard", "BIOS"]
-    # categories = ["OS", "CPU", "DiskDrive", "LogicalDisk", "MemoryChip", "Baseboard", "BIOS", "DISKQUOTA", "MEMORYCHIP", "NIC", "PORT", "PORTCONNECTOR", "REGISTRY", "SOUNDDEV", "SYSTEMSLOT", "UPS", "VOLTAGE", "BASEBOARD", "BIOS", "COMPUTERSYSTEM", "DESKTOPMONITOR", "DMACHANNEL", "FSDIR"]
+    categories = ["OS", "CPU", "DiskDrive", "LogicalDisk", "MemoryChip", "Baseboard", "BIOS"]    
 
     # Retrieve data for all categories when the program starts
     category_data = {}
@@ -79,8 +78,9 @@ def main():
         pairs = category_data.get(category, {})
 
         table = create_table(tab, pairs)
-
-    tabs.pack(fill="both", expand=True)  # Make the tabs expand to fill the window
+        
+    # Make the tabs expand to fill the window
+    tabs.pack(fill="both", expand=True)  
 
     app.mainloop()
 

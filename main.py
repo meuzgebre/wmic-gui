@@ -36,6 +36,10 @@ def execute_wmic_command(category):
 
             pairs = dict(zip(headers, values))
 
+            # Create the "temp" folder if it doesn't exist
+            if not os.path.exists("temp"):
+                os.makedirs("temp")
+
             # Cache the data in a local file
             cache_file = f"temp/{category}.json"
             with open(cache_file, "w") as cache:

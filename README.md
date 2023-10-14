@@ -32,6 +32,11 @@ python wmic_gui.py
 - Click on a tab to view information about the selected category.
 - Enjoy exploring the system attributes and their values in a clean and organized format.
 
+## How to build standalone executable from source
+```
+pyinstaller --windowed --icon=icon.ico --add-data="icon.ico;." -n "WMIC GUI" --onefile main.py
+```
+
 ## Known Issues
 
 - Please note that this application is designed for Windows systems only, as it relies on WMIC commands.

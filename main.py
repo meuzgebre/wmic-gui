@@ -3,6 +3,10 @@ from tkinter import ttk
 import subprocess
 import threading
 import json, os
+import tempfile
+
+# Get the system's universal temporary directory
+temp_dir = tempfile.gettempdir()
 
 BASE_DIR = os.path.dirname(__file__)
 
@@ -36,12 +40,13 @@ def execute_wmic_command(category):
 
             pairs = dict(zip(headers, values))
 
-            # Create the "temp" folder if it doesn't exist
-            if not os.path.exists("temp"):
-                os.makedirs("temp")
+            # Create the "wmic_temp" folder if it doesn't exist in the universal temporary directory
+            temp_folder = os.path.join(temp_dir, "wmic_temp")
+            if not os.path.exists(temp_folder):
+                os.makedirs(temp_folder)
 
-            # Cache the data in a local file
-            cache_file = f"temp/{category}.json"
+            # Cache the data in a local file in the "wmic_temp" folder
+            cache_file = os.path.join(temp_folder, f"{category}.json")
             with open(cache_file, "w") as cache:
                 json.dump(pairs, cache)
 

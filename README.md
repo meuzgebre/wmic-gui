@@ -1,5 +1,7 @@
 # WMIC-GUI: Windows System Information Viewer
 
+![Screenshot_1](https://github.com/meuzgebre/wmic-gui/assets/95613515/bdd85d17-5018-42c8-889c-72bda1d57e92)
+
 WMIC-GUI is a Python application that allows you to retrieve and display system information from a Windows machine using the Windows Management Instrumentation Command-line (WMIC). This GUI application provides an easy-to-use interface to view various system attributes and their values.
 
 ## Features
